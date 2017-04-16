@@ -29,14 +29,7 @@ actData$date <- as.Date(actData$date,format = "%Y-%m-%d")
 ```r
 dailySummary <- summarise(group_by(actData, date), sum(steps, na.rm = TRUE ))
 names(dailySummary) <- c("Date", "Steps")
-plot(x = dailySummary$Date, 
-        y = dailySummary$Steps, 
-        xlab = "Date", 
-        ylab = "Daily Steps", 
-        main = "Steps per Day", 
-        type = "h", 
-        lwd = 5)
-abline(h=mean(dailySummary$Steps, na.rm=TRUE), col = "red")
+hist(dailySummary$Steps, main = "Total Steps per Day", xlab = "Number of Steps", ylab = "Frequency", labels = TRUE)
 ```
 
 ![](PA1_template_files/figure-html/obj2-1.png)<!-- -->
@@ -95,14 +88,7 @@ actDataImputed[idxNA,"steps"] <- actDataImputed[idxNA,"Steps"]
 ```r
 dailySummaryImputed <- summarise(group_by(actDataImputed, date), sum(steps, na.rm = TRUE ))
 names(dailySummaryImputed) <- c("Date", "Steps")
-plot(x = dailySummaryImputed$Date, 
-     y = dailySummaryImputed$Steps, 
-     xlab = "Date", 
-     ylab = "Daily Steps", 
-     main = "Steps per Day with Missing Values imputed", 
-     type = "h", 
-     lwd = 5)
-abline(h=mean(dailySummaryImputed$Steps, na.rm=TRUE), col = "red")
+hist(dailySummaryImputed$Steps, main = "Total Steps per Day with NA values Imputed", xlab = "Number of Steps", ylab = "Frequency", labels = TRUE)
 ```
 
 ![](PA1_template_files/figure-html/obj7-1.png)<!-- -->
@@ -111,15 +97,15 @@ abline(h=mean(dailySummaryImputed$Steps, na.rm=TRUE), col = "red")
 meanStepsPerDayImputed <- mean(dailySummaryImputed$Steps, na.rm = TRUE)
 medianStepsPerDayImputed <- median(dailySummaryImputed$Steps, na.rm = TRUE)
 ```
-**New Mean steps** per day with imputed data: 9354.2295082  
-**New Median steps** per day with imputed data: 10395
+**New Mean steps** per day with imputed data: 10766.19  
+**New Median steps** per day with imputed data: 10766.19
 
 ### Objective 8 - Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
 
 ```r
 weekdaysVector <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
 actDataImputed$WeekDayOrEnd <- factor((weekdays(actDataImputed$date) %in% weekdaysVector), 
-                                      levels = c(FALSE,TRUE), 
+                                      levels = c(TRUE,FALSE), 
                                       labels = c("Weekday","Weekend"))
 
 actDataImputedByWeekDayEndByInt <- actDataImputed %>% group_by(WeekDayOrEnd, interval) %>% summarize(MeanSteps = mean(steps))
